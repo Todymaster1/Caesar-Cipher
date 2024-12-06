@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+</head>
+<body>
+    <h1>Caesar Cipher Encryptor/Decryptor</h1>
+    
+    <label for="userInput">Enter your message:</label><br>
+    <textarea id="userInput" rows="4" cols="50" placeholder="Type your message here..."></textarea><br><br>
+    
+    
+    <input type="radio" name="operation" value="encrypt" checked> 
+    <label>Encrypt</label>
+    
+    <input type="radio" name="operation" value="decrypt"> 
+    <label>Decrypt</label>
+    <br>
+    <br>
+    
+    <label for="shift">Shift:</label>
+    <input type="number" id="shift" value="1" min="1" max="25">
+    <br>
+    <br>
+    
+    <input type="radio" name="direction" value="right" checked>
+    <label>Right</label>
+
+    <label>
+        <input type="radio" name="direction" value="left"> Left
+    </label><br><br>
+    
+    <button onclick="processCipher()">Process</button><br><br>
+    
+    <label for="result">Result:</label><br>
+    <textarea id="result" rows="4" cols="50" readonly></textarea>
+
+    <script>
+        function processCipher() {
+            //Get user inputs
+            const text = document.getElementById("userInput").value;
+            const shift = parseInt(document.getElementById("shift").value, 10);
+            const direction = document.querySelector('input[name="direction"]:checked').value;
+            const operation = document.querySelector('input[name="operation"]:checked').value;
+
+            // Determine shift direction and operation
+            let adjustedShift = (direction === "left") ? -shift : shift;
+            if (operation === "decrypt") adjustedShift = -adjustedShift;
+
+            // Perform Caesar Cipher
+            const result = text.split("").map(char => {
+                const charCode = char.charCodeAt(0);
+                const baseCode = char.match(/[A-Z]/) ? 65 : 97; // Uppercase or lowercase
+                const newCharCode = ((charCode - baseCode + adjustedShift) % 26 + 26) % 26 + baseCode;
+
+                return String.fromCharCode(newCharCode);
+            }).join("");
+
+            //Display result
+            document.getElementById("result").value = result;
+        }
+    </script>
+</body>
+</html>
